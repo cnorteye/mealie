@@ -1,5 +1,6 @@
 <template>
-  <VueMarkdown :source="sanitizeMarkdown(source)"></VueMarkdown>
+  <!-- Pass the preporcessed and sanitized Markdown source to VueMarkdown -->
+  <VueMarkdown :source="sanitizeMarkdown(preprocessMarkdown(source))"></VueMarkdown>
 </template>
 
 <script lang="ts">
@@ -19,6 +20,15 @@ export default defineComponent({
     },
   },
   setup() {
+
+    // Preprocess the Markdown source to handle single-line breaks
+    function preprocessMarkdown(rawMarkdown: string | null | undefined): string {
+      if(!rawMarkdown) {
+        return "";
+      }
+      return rawMarkdown.replace(/\n/g, " <br>");
+    }
+
     function sanitizeMarkdown(rawHtml: string | null | undefined): string {
       if (!rawHtml) {
         return "";
@@ -43,6 +53,7 @@ export default defineComponent({
     }
 
     return {
+      preprocessMarkdown,
       sanitizeMarkdown,
     };
   },
